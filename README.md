@@ -2,7 +2,7 @@
 
 AutoStream is an intelligent assistant designed for a fictional video editing SaaS. It converts casual social media conversations into qualified business leads by identifying intent, answering product questions using a knowledge base (RAG), and capturing lead details through multi-turn dialogue.
 
-## 🚀 Key Features
+##  Key Features
 
 - **Native Gemini Integration**: Leveraging the latest Google Gemini 2.5 Flash model for high-performance reasoning.
 - **RAG-Powered FAQ**: Answers questions about pricing, plans, and policies using a local JSON knowledge base.
@@ -10,7 +10,7 @@ AutoStream is an intelligent assistant designed for a fictional video editing Sa
 - **Function Calling**: Automatically triggers a lead capture tool once all required information is gathered.
 - **Professional Architecture**: Clean separation between agent logic, tools, and the main interaction loop.
 
-## 🛠️ Project Structure
+##  Project Structure
 
 - `agent.py`: Core logic for the Gemini model, system instructions, and tool handling.
 - `main.py`: Interactive CLI tool for chatting with the agent.
@@ -18,7 +18,7 @@ AutoStream is an intelligent assistant designed for a fictional video editing Sa
 - `knowledge_base.json`: Local storage for plans, pricing, and company policies.
 - `verify_agent.py`: Automated test suite for validating conversation flows.
 
-## ⚙️ Setup & Installation
+##  Setup & Installation
 
 1. **Clone the project** and navigate to the directory.
 2. **Install Dependencies**:
@@ -32,7 +32,7 @@ AutoStream is an intelligent assistant designed for a fictional video editing Sa
      GOOGLE_API_KEY=your_actual_key_here
      ```
 
-## 🧪 Testing the Agent
+##  Testing the Agent
 
 ### Automated Validation
 Run the scripted test suite to verify all core features (Greeting → FAQ → Lead Capture):
@@ -46,15 +46,15 @@ Talk to the agent directly in your terminal:
 python3 main.py
 ```
 
-## 🏗️ Architecture Rationale
+##  Architecture Rationale
 
 This project initially used LangGraph but was migrated to the **native Google Gemini SDK** to reduce overhead and gain finer control over **System Instructions** and **Native Tool Calling**. 
 
 By using Gemini's native state management and function calling, the agent is more robust at handling edge cases during data collection while maintaining a fast, lower-latency response profile.
 
-## 📱 WhatsApp Integration Plan
+## 📱 WhatsApp Integration Plan (My Assumption)
 
-To deploy this agent on WhatsApp, I would:
+we can  deploy this agent on WhatsApp, I would:
 1. **Meta Developer Portal**: Set up a WhatsApp Business API account.
 2. **FastAPI Webhook**: Build a backend to receive incoming messages from Meta's webhooks.
 3. **Context Persistence**: Use a database (like Redis or Supabase) to store conversation history keyed by the user's phone number.
