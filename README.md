@@ -1,51 +1,62 @@
-# AutoStream Social-to-Lead Agent
+# AutoStream: AI-Powered Social-to-Lead Agent
 
-An AI-powered platform that converts social media conversations into qualified business leads for AutoStream, an automated video editing SaaS.
+AutoStream is an intelligent assistant designed for a fictional video editing SaaS. It converts casual social media conversations into qualified business leads by identifying intent, answering product questions using a knowledge base (RAG), and capturing lead details through multi-turn dialogue.
 
-## Features
-- **Intent Identification**: Classifies user messages into Casual Greeting, Product Inquiry, or High-Intent.
-- **RAG-Powered Knowledge Retrieval**: Answers pricing and policy questions using a local JSON knowledge base.
-- **Stateful Lead Capture**: Collects name, email, and creator platform across multiple conversation turns.
-- **Mock Tool Execution**: Triggers a lead capture function once all data is collected.
+## 🚀 Key Features
 
-## How to Run Locally
+- **Native Gemini Integration**: Leveraging the latest Google Gemini 2.5 Flash model for high-performance reasoning.
+- **RAG-Powered FAQ**: Answers questions about pricing, plans, and policies using a local JSON knowledge base.
+- **Stateful Conversation**: Maintains context across multiple turns to collect user details (Name, Email, Platform).
+- **Function Calling**: Automatically triggers a lead capture tool once all required information is gathered.
+- **Professional Architecture**: Clean separation between agent logic, tools, and the main interaction loop.
 
-1. **Clone the repository** (if applicable).
-2. **Install dependencies**:
+## 🛠️ Project Structure
+
+- `agent.py`: Core logic for the Gemini model, system instructions, and tool handling.
+- `main.py`: Interactive CLI tool for chatting with the agent.
+- `tools.py`: Contains the `mock_lead_capture` function for CRM integration.
+- `knowledge_base.json`: Local storage for plans, pricing, and company policies.
+- `verify_agent.py`: Automated test suite for validating conversation flows.
+
+## ⚙️ Setup & Installation
+
+1. **Clone the project** and navigate to the directory.
+2. **Install Dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
-3. **Set up your Gemini API Key**:
-   ```bash
-   export GOOGLE_API_KEY='your_api_key_here'
-   ```
-4. **Run the agent**:
-   ```bash
-   python3 main.py
-   ```
+3. **Configure Environment**:
+   - Create a `.env` file based on `.env_example`.
+   - Add your Google AI Studio API key:
+     ```env
+     GOOGLE_API_KEY=your_actual_key_here
+     ```
 
-## Architecture Explanation
+## 🧪 Testing the Agent
 
-I chose **LangGraph** for this project because it excels at managing stateful, cyclic workflows. Unlike linear chains, LangGraph allows the agent to loop back and ask for missing information, which is critical for the lead collection process.
+### Automated Validation
+Run the scripted test suite to verify all core features (Greeting → FAQ → Lead Capture):
+```bash
+python3 verify_agent.py
+```
 
-**State Management**: 
-The `AgentState` is a `TypedDict` that stores:
-- `messages`: A list of all conversation history, ensuring the agent retains context across 5-6 turns.
-- `intent`: The current identified user intent, used for routing.
-- `lead_info`: A dictionary that accumulates user details (name, email, platform) as they are extracted from different turns.
-- `last_requested`: Keeps track of what the agent last asked the user.
+### Interactive Chat
+Talk to the agent directly in your terminal:
+```bash
+python3 main.py
+```
 
-The workflow uses a **Classifier Node** to route inputs to specialized nodes: `greeting`, `rag` (for retrieval), or `collector` (for stateful lead capture). This modular approach ensures clean separation of concerns and high reliability in intent detection.
+## 🏗️ Architecture Rationale
 
-## WhatsApp Deployment
+This project initially used LangGraph but was migrated to the **native Google Gemini SDK** to reduce overhead and gain finer control over **System Instructions** and **Native Tool Calling**. 
 
-To integrate this agent with WhatsApp, I would use the following steps:
+By using Gemini's native state management and function calling, the agent is more robust at handling edge cases during data collection while maintaining a fast, lower-latency response profile.
 
-1. **Meta for Developers Account**: Register an app on the Meta developer portal.
-2. **Webhook Setup**: Create a FastAPI or Flask endpoint that Meta's servers will call whenever a message is received.
-3. **Integration**:
-   - Receive the JSON payload from the WhatsApp Cloud API webhook.
-   - Extract the `from` phone number (to use as a thread ID for state management) and the message body.
-   - Pass the message to the LangGraph `app.invoke()` method, using the phone number to retrieve/persist the state.
-   - Send the result back to the user via the WhatsApp Cloud API POST request (`/messages` endpoint).
-4. **Asynchronous Handling**: Use a task queue like Celery or a serverless function (AWS Lambda/Vercel) to handle requests asynchronously to avoid timeout issues with WhatsApp's 10-second webhook limit.
+## 📱 WhatsApp Integration Plan
+
+To deploy this agent on WhatsApp, I would:
+1. **Meta Developer Portal**: Set up a WhatsApp Business API account.
+2. **FastAPI Webhook**: Build a backend to receive incoming messages from Meta's webhooks.
+3. **Context Persistence**: Use a database (like Redis or Supabase) to store conversation history keyed by the user's phone number.
+4. **Response Loop**: Forward incoming text to the `AgentApp`, then send the model's response back using the WhatsApp Cloud API.
+5. **Async Processing**: Use Celery/Redis to handle requests asynchronously, ensuring responses stay within WhatsApp's 10-second webhook window.
